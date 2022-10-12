@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace E_Wallet.Data.Repositories
 {
-    public class NcomesRepository : GenericRepository<Income>, IIncomeRepository
+    public class IncomeRepository : GenericRepository<Income>, IIncomeRepository
     {
-        public NcomesRepository(WalletDbContext dbContext) : base(dbContext)
+        public IncomeRepository(WalletDbContext dbContext) : base(dbContext)
         {
         }
     }

@@ -7,4 +7,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\E-Wallet.Data\E-Wallet.Data.csproj" />
+    <ProjectReference Include="..\E-Wallet.Domain\E-Wallet.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

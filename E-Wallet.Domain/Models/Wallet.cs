@@ -11,5 +11,6 @@ namespace E_Wallet.Domain.Models
         public decimal Amount { get; set; }
         public decimal MaxAmount { get; set; } = 10.000M;
         public DateTime CreateDate { get; set; }
+        public bool Isbocked { get; set; }
     }
 }

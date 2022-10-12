@@ -17,12 +17,20 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.7" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="System.Runtime.Caching" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Controllers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\E-Wallet.Data\E-Wallet.Data.csproj" />
+    <ProjectReference Include="..\E-Wallet.Domain\E-Wallet.Domain.csproj" />
+    <ProjectReference Include="..\E-Wallet.Service\E-Wallet.Service.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,3 +1,5 @@
+using E_Wallet.CustomMiddleware;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -16,6 +18,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<CustomExceptionMiddleware>();
+app.UseMiddleware<HMACAuthenticationMiddleware>();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
