@@ -23,10 +23,13 @@ namespace E_Wallet.CustomMiddleware
 
             string clientId = headerKeys.Select(key => key.Value).Where(key => key == "X-UserId").ToString();
             string requestHash = headerKeys.Select(key => key.Value).Where(key => key == "X-Digest").ToString();
+            string nonce = headerKeys.Select(key => key.Value).Where(key => key == "nonce").ToString();
+            string timestamp = headerKeys.Select(key => key.Value).Where(key => key == "timestamp").ToString();
+
 
             string ClientSecret = config.GetSection("Authorization").Get<Dictionary<string, string>>().Where(item => item.Value == clientId).Select(item => item.Value).FirstOrDefault();
 
-            bool checkAuthentication = HMACAuthenticationHelper.IsValidRequest(context.Request, ClientSecret, requestHash, "", "");
+            bool checkAuthentication = HMACAuthenticationHelper.IsValidRequest(context.Request, ClientSecret, requestHash, nonce, timestamp);
 
             if (!checkAuthentication)
                 throw new HttpStatusCodeException(401, "UnAuthorized");

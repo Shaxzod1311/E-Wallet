@@ -4,18 +4,19 @@ using E_Wallet.Domain.Common;
 using E_Wallet.Service.DTOs;
 using E_Wallet.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Xml.XPath;
+
 
 namespace E_Wallet.Service.Services
 {
     public class WalletService : IWalletService
     {
         private readonly IUnitOfWork? unitOfWork;
+        public readonly IMapper mapper;
 
-        public WalletService(IUnitOfWork? unitOfWork)
+        public WalletService(IUnitOfWork? unitOfWork, IMapper mapper)
         {
             this.unitOfWork = unitOfWork;
+            this.mapper = mapper;
         }
 
 
@@ -73,10 +74,14 @@ namespace E_Wallet.Service.Services
 
             var result = unitOfWork.Incomes.GetAll(income => income.ToWalletId == walletId && income.Date.Month == date.Month).ToList();
 
+            var mappedList = mapper.Map<IEnumerable<IncomeDTO>>(result);
+
             if (result == null)
                 throw new HttpStatusCodeException(404, "Wallet not found");
             
-            response.Data = result;
+            response.Data = mappedList;
+
+            return response;
         }
     }
 }
