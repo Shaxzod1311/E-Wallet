@@ -10,6 +10,8 @@ namespace E_Wallet.Domain.Models
         public Guid Id { get; set; }
         public string? Username { get; set; }
         public string? Password { get; set; }
+        public string? Name { get; set; }
+        public string? Phone { get; set; }
         
         [ForeignKey(nameof(Wallet))]
         public Guid WalletId { get; set; }
