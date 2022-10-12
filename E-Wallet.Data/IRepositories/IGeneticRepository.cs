@@ -1,20 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
+
 
 namespace E_Wallet.Data.IRepositories
 {
-    public interface IGenericRepository<TEntity> where TEntity : class 
+    public interface IGenericRepository<T> where T : class
     {
-        DbSet<TEntity> Entities { get; }
-        IQueryable<TEntity> GetAll();
-        Task<TEntity> GetByIdAsync(Guid? id);
-        Guid Add(TEntity obj);
-        bool Update(TEntity obj);
-        bool Remove(TEntity obj);
-        void Dispose();
+        Task<T> GetAsync(Expression<Func<T, bool>> predicate);
+        Task<T> CreateAsync(T entity);
+        T Update(T entity);
+        T Delete(T entity);
+        IQueryable<T> GetAll(Expression<Func<T, bool>> predicate);
     }
 }
