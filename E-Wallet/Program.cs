@@ -1,4 +1,5 @@
 using E_Wallet.CustomMiddleware;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,7 +8,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(); 
+
+builder.Services.AddScoped<IAuthorizationHandler, HmacAuthorizationHandler>();
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Hmac", policy =>
+    {
+        policy.AddRequirements(new HmacAuthorizationRequirement(userId => GetSecretKey(userId)));
+    });
+});
+
 
 var app = builder.Build();
 
@@ -19,7 +31,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<CustomExceptionMiddleware>();
-app.UseMiddleware<HMACAuthenticationMiddleware>();
+app.UseMiddleware<AuthenticationMiddleware>();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

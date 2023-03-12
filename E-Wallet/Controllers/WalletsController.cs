@@ -2,44 +2,61 @@
 using E_Wallet.Domain.Common;
 using E_Wallet.Service.DTOs;
 using E_Wallet.Service.Interfaces;
+using E_Wallet.Service.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Wallet.Controllers
 {
     [ApiController]
-    [Route("api/[controller]/action")]
-    public class WalletsController : ControllerBase
+    [Route("api/[controller]")]
+    public class EWalletController : ControllerBase
     {
-        private readonly IWalletService walletService;
+        private readonly WalletService _service;
 
-        public WalletsController(IWalletService walletService)
+        public EWalletController(WalletService service)
         {
-            this.walletService = walletService;
+            _service = service;
         }
 
-
-        [HttpPost]
-        public async Task<ActionResult<BaseResponse<decimal>>> BalanceOfWalletAsync(Guid walletId)
+        // 1. Check if the e-wallet account exists.
+        [HttpPost("check")]
+        public async Task<IActionResult> CheckAccountExistsAsync([FromBody] CheckAccountExistsRequest request)
         {
-            return Ok(await walletService.BalanceOfWalletAsync(walletId));
+            if (!ModelState.IsValid) return BadRequest();
+
+            var exists = await _service.CheckAccountExistsAsync(request.AccountNumber);
+            return Ok(new CheckAccountExistsResponse { Exists = exists });
         }
 
-        [HttpPost]
-        public async Task<ActionResult<BaseResponse<Guid>>> CheckWalletExistingAsync(string username, string password)
+        // 2. Replenish e-wallet account.
+        [HttpPost("replenish")]
+        public async Task<IActionResult> ReplenishAccountAsync([FromBody] ReplenishAccountRequest request)
         {
-            return Ok(await walletService.CheckWalletExistingAsync(username, password));
+            if (!ModelState.IsValid) return BadRequest();
+
+            var success = await _service.ReplenishAccountAsync(request.AccountNumber, request.Amount);
+            if (!success) return BadRequest();
+
+            return Ok();
         }
 
-        [HttpPost]
-        public async Task<ActionResult<BaseResponse<bool>>> FillWalletAsync(decimal amount, Guid walletId)
+        // 3. Get the total number and amount of recharge operations for the current month.
+        [HttpPost("recharge-summary")]
+        public async Task<IActionResult> GetRechargeSummaryAsync(Guid walletId)
         {
-            return Ok(await walletService.FillWalletAsync(amount, walletId)); 
+            var summary = await _service.GetRechargeSummaryAsync(walletId);
+            return Ok(new GetRechargeSummaryResponse {  });
         }
 
-        [HttpPost]
-        public async Task<ActionResult<BaseResponse<IEnumerable<IncomeDTO>>>> FullMonthIncomeAsync(Guid walletId, DateTime date)
+        // 4. Get the e-wallet balance.
+        [HttpPost("balance")]
+        public async Task<IActionResult> GetAccountBalanceAsync([FromBody] GetAccountBalanceRequest request)
         {
-            return Ok(await walletService.FullMonthIncomeAsync(walletId, date));
+            if (!ModelState.IsValid) return BadRequest();
+
+            var balance = await _service.GetAccountBalanceAsync(request.AccountNumber);
+            return Ok(new GetAccountBalanceResponse { Balance = balance });
         }
     }
 }
+

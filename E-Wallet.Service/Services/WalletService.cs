@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
 using E_Wallet.Data.IRepositories;
 using E_Wallet.Domain.Common;
+using E_Wallet.Domain.Models;
 using E_Wallet.Service.DTOs;
 using E_Wallet.Service.Interfaces;
-using Microsoft.EntityFrameworkCore;
+
 
 
 namespace E_Wallet.Service.Services
@@ -19,69 +20,53 @@ namespace E_Wallet.Service.Services
             this.mapper = mapper;
         }
 
-
-        public async Task<BaseResponse<decimal>> BalanceOfWalletAsync(Guid walletId)
+        public async Task<WalletDTO> CheckAccountExistsAsync(Guid accountNumber)
         {
-            BaseResponse<decimal> response = new BaseResponse<decimal>();
+            var wallet = await unitOfWork.Wallets.GetAsync(wallet => wallet.Id == accountNumber);
 
-            var result = await unitOfWork.Wallets.GetAsync(wallet => wallet.Id == walletId);
-
-            if (result == null)
-                throw new HttpStatusCodeException(404, "Wallet not found");
-
-            response.Data = result.Amount;
-
-            return response;
+            if (wallet != null)
+            {
+                var walletDTO = mapper.Map<WalletDTO>(wallet);
+                return walletDTO;
+            }
+            else
+                return null;
         }
 
-        public async Task<BaseResponse<Guid>> CheckWalletExistingAsync(string username, string password)
+        public async Task<bool> ToUpAccountAsync(Guid accountNumber, decimal amount)
         {
-            BaseResponse<Guid> response = new BaseResponse<Guid>();
+            var account = await unitOfWork.Wallets.GetAsync(wallet => wallet.Id == accountNumber);
+            if (account == null) return false;
 
-            var result = await unitOfWork.Users.GetAll(user => user.Password == password && user.Username == username).Include(user => user.Wallet).Select(wallet => wallet.WalletId).FirstOrDefaultAsync();
+            var newBalance = account.Balance + amount;
+            if (account.IsIdentified && newBalance > 100000) return false;
+            if (!account.IsIdentified && newBalance > 10000) return false;
 
-            if (result == null)
-                throw new HttpStatusCodeException(404, "Wallet not found");
+            account.Balance = newBalance;
+            unitOfWork.Wallets.Update(account);
 
-            response.Data = result;
+            await unitOfWork.SaveChangesAsync();
 
-            return response;
+            return true;
         }
 
-        public async Task<BaseResponse<bool>> FillWalletAsync(decimal amount, Guid walletId)
+        public async Task<IEnumerable<Transaction>> GetRechargeSummaryAsync(Guid walletId)
         {
-            BaseResponse<bool> response = new BaseResponse<bool>();
+            var currentMonth = DateTime.Now.Month;
 
-            var result = await unitOfWork.Wallets.GetAsync(wallet => wallet.Id == walletId);
+            var result = unitOfWork.Transaction.GetAll(act => act.ToWalletId == walletId && act.Date.Month == currentMonth).AsEnumerable();
 
-            if (result == null)
-                throw new HttpStatusCodeException(404, "wallet not found");
-
-            if (amount + result.Amount > result.MaxAmount)
-                throw new HttpStatusCodeException(79, "transmission failure");
-            
-            result.Amount += amount;
-
-            response.Data = true;
-
-            return response;
+            return result;
         }
 
-        public async Task<BaseResponse<IEnumerable<IncomeDTO>>> FullMonthIncomeAsync(Guid walletId, DateTime date)
+        public async Task<decimal> GetAccountBalanceAsync(Guid accountNumber)
         {
-            BaseResponse<IEnumerable<IncomeDTO>> response = new BaseResponse<IEnumerable<IncomeDTO>>();
+            var account = await unitOfWork.Wallets.GetAsync(wallet => wallet.Id == accountNumber);
 
+            if (account == null) return 0;
 
-            var result = unitOfWork.Incomes.GetAll(income => income.ToWalletId == walletId && income.Date.Month == date.Month).ToList();
-
-            var mappedList = mapper.Map<IEnumerable<IncomeDTO>>(result);
-
-            if (result == null)
-                throw new HttpStatusCodeException(404, "Wallet not found");
-            
-            response.Data = mappedList;
-
-            return response;
+            return account.Balance;
         }
     }
 }
+

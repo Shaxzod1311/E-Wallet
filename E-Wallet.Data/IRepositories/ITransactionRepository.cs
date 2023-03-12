@@ -2,7 +2,7 @@
 
 namespace E_Wallet.Data.IRepositories
 {
-    public interface IIncomeRepository : IGenericRepository<Income>
+    public interface ITransactionRepository : IGenericRepository<Transaction>
     {
     }
 }

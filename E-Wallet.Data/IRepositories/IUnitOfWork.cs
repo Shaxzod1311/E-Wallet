@@ -4,7 +4,7 @@
     {
         public IWalletRepository Wallets { get; }
         public IUserRepository Users { get; }
-        public IIncomeRepository Incomes { get; }
+        public ITransactionRepository Transaction { get; }
         Task SaveChangesAsync();
     }
 }

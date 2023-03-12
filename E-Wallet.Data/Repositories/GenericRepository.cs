@@ -25,8 +25,8 @@ namespace E_Wallet.Data.Repositories
 
         public T Delete(T entity) => dbSet.Remove(entity).Entity;
 
-        public IQueryable<T> GetAll(Expression<Func<T, bool>> predicate) => predicate == null ? dbSet : dbSet.Where(predicate);
-
+        public IQueryable<T> GetAll(Expression<Func<T, bool>> predicate = null) => predicate == null ? dbSet : dbSet.Where(predicate);
+            
         public async Task<T> GetAsync(Expression<Func<T, bool>> predicate) => await dbSet.FirstOrDefaultAsync(predicate);
 
         public T Update(T entity) => dbSet.Update(entity).Entity;

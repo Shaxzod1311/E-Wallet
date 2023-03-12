@@ -8,9 +8,11 @@ namespace E_Wallet.Domain.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public Guid Id { get; set; }
-        public decimal Amount { get; set; }
-        public decimal MaxAmount { get; set; } = 10.000M;
-        public DateTime CreateDate { get; set; }
-        public bool Isbocked { get; set; }
+        public Guid AccountNumber { get; set; }
+        [ForeignKey(nameof(User))]
+        public Guid UserId { get; set; }
+        public bool IsIdentified { get; set; }
+        public decimal Balance { get; set; }
+        public User User { get; set; }
     }
 }

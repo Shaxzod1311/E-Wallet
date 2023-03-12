@@ -11,6 +11,6 @@ namespace E_Wallet.Data.Data
 
         public DbSet<User>? Users { get; set; }
         public DbSet<Wallet>? Wallets { get; set; }
-        public DbSet<Income>? Incomes { get; set; }
+        public DbSet<Transaction>? Incomes { get; set; }
     }
 }

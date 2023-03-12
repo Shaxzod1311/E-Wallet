@@ -16,5 +16,6 @@ namespace E_Wallet.Domain.Models
         [ForeignKey(nameof(Wallet))]
         public Guid WalletId { get; set; }
         public Wallet? Wallet { get; set; }
+        public string SecretKey { get; set; }
     }
 }

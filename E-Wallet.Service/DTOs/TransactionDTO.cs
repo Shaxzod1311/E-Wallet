@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace E_Wallet.Service.DTOs
 {
-    public class IncomeDTO
+    public class TransactionDTO
     {
         public Guid UserId { get; set; }
         public Guid ToWalletId { get; set; }
