@@ -66,9 +66,11 @@ namespace E_Wallet.Service.Services
 
             wallet.Balance = newBalance;
 
-            unitOfWork.Wallets.Update(wallet);
+            var updatedWallet = unitOfWork.Wallets.Update(wallet);
 
             await unitOfWork.SaveChangesAsync();
+
+            response.Data = updatedWallet.Id;
 
             return response;
         }

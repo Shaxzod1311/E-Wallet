@@ -11,7 +11,7 @@ namespace E_Wallet.Service.Services
     public class WalletService : IWalletService
     {
         private readonly IUnitOfWork? unitOfWork;
-        public readonly IMapper mapper;
+        private readonly IMapper mapper;
 
         public WalletService(IUnitOfWork? unitOfWork, IMapper mapper)
         {

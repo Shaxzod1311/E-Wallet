@@ -9,12 +9,8 @@ using E_Wallet.Service.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace E_Wallet_xUnit_Tests.Applicatoins
 {
@@ -31,7 +27,6 @@ namespace E_Wallet_xUnit_Tests.Applicatoins
         public UserServiceTest()
         {
             moqHttpContextAccessor = new Mock<IHttpContextAccessor>();
-            httpContextHelper = new Mock<HttpContextHelper>(moqHttpContextAccessor.Object);
 
             var configurationProvider = new MapperConfiguration(cfg =>
             {
@@ -47,7 +42,10 @@ namespace E_Wallet_xUnit_Tests.Applicatoins
             var claims = new List<Claim>
             {
 
-                new Claim("UserId", userId != null ? userId.ToString() : null),
+                new Claim("Id", userId != null ? userId.ToString() : null),
+                new Claim("Username", userId != null ? userId.ToString() : null),
+                new Claim("IsIdentified", "true"),
+
             };
 
             var identity = new ClaimsIdentity(claims, "test_claims");
@@ -58,10 +56,12 @@ namespace E_Wallet_xUnit_Tests.Applicatoins
 
             moqHttpContextAccessor = new Mock<IHttpContextAccessor>();
             moqHttpContextAccessor.Setup(x => x.HttpContext).Returns(_moqHttpContext.Object);
-            httpContextHelper.Setup(x => x.Context.User).Returns(claimPrincipal);
+            moqHttpContextAccessor.Setup(x => x.HttpContext.User).Returns(claimPrincipal);
 
+            httpContextHelper = new Mock<HttpContextHelper>(moqHttpContextAccessor.Object);
 
         }
+
         private void ConfigureDatabase()
         {
             var dbName = Guid.NewGuid();
@@ -75,6 +75,7 @@ namespace E_Wallet_xUnit_Tests.Applicatoins
         private void ConfigureServices()
         {
             user = new IdentifyUser(httpContextHelper.Object);
+            moqUnitOfWrok = new Mock<UnitOfWork>(db);
             userService = new UserService(moqUnitOfWrok.Object, mapper, user);
         }
 

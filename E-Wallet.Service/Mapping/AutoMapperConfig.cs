@@ -9,6 +9,8 @@ namespace E_Wallet.Service.Mapping
         public AutoMapperConfig()
         {
             CreateMap<Wallet, WalletDTO>().ReverseMap();
+            CreateMap<Transaction, TransactionDTO>().ReverseMap();
+
         }
     }
 }

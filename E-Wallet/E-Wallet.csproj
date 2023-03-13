@@ -30,8 +30,4 @@
     <ProjectReference Include="..\E-Wallet.Service\E-Wallet.Service.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 </Project>
