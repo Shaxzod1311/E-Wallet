@@ -12,10 +12,10 @@ namespace E_Wallet.Domain.Models
         public string? Password { get; set; }
         public string? Name { get; set; }
         public string? Phone { get; set; }
-        
-        [ForeignKey(nameof(Wallet))]
-        public Guid WalletId { get; set; }
-        public Wallet? Wallet { get; set; }
-        public string SecretKey { get; set; }
+        public bool IsIdentified { get; set; }
+        public string? SecretKey { get; set; }
+
+        public virtual ICollection<Transaction>? Transactions { get; set; }
+        public virtual ICollection<Wallet>? Wallets { get; set; }
     }
 }

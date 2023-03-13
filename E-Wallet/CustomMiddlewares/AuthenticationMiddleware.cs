@@ -1,6 +1,4 @@
 ﻿using E_Wallet.Data.IRepositories;
-using E_Wallet.Domain.Common;
-using E_Wallet.HmacService;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
@@ -32,10 +30,14 @@ namespace E_Wallet.CustomMiddleware
                 return;
             }
 
-            var authToken = authHeader.Parameter;
-            var authInfo = Encoding.UTF8.GetString(Convert.FromBase64String(authToken));
-            var userId = Guid.Parse(authInfo.Split(':')[0]);
-            var digest = authInfo.Split(':')[1];
+            var userId = context.Request.Headers["X-UserId"];
+            var digest = context.Request.Headers["X-Digest"];
+
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(digest))
+            {
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return;
+            }
 
             var user = await userRepository.GetAsync(user => user.Id == userId);
 

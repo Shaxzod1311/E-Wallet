@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-Wallet", "E-Wallet\E-Wallet.csproj", "{14E6B85D-8832-49B5-ADEC-269F655B510A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E-Wallet", "E-Wallet\E-Wallet.csproj", "{14E6B85D-8832-49B5-ADEC-269F655B510A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-Wallet.Data", "E-Wallet.Data\E-Wallet.Data.csproj", "{4CDC3DAB-CD64-41CD-88C1-5654DF756984}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E-Wallet.Data", "E-Wallet.Data\E-Wallet.Data.csproj", "{4CDC3DAB-CD64-41CD-88C1-5654DF756984}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-Wallet.Domain", "E-Wallet.Domain\E-Wallet.Domain.csproj", "{8DA978A9-5946-4FD3-8FA2-188E59B58304}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E-Wallet.Domain", "E-Wallet.Domain\E-Wallet.Domain.csproj", "{8DA978A9-5946-4FD3-8FA2-188E59B58304}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-Wallet.Service", "E-Wallet.Service\E-Wallet.Service.csproj", "{34221A80-0848-42A3-BD24-965CF3AD2625}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E-Wallet.Service", "E-Wallet.Service\E-Wallet.Service.csproj", "{34221A80-0848-42A3-BD24-965CF3AD2625}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-Wallet-xUnit-Tests", "E-Wallet-xUnit-Tests\E-Wallet-xUnit-Tests.csproj", "{3780DD83-E66A-4C03-B791-86F095C73776}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{34221A80-0848-42A3-BD24-965CF3AD2625}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34221A80-0848-42A3-BD24-965CF3AD2625}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34221A80-0848-42A3-BD24-965CF3AD2625}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3780DD83-E66A-4C03-B791-86F095C73776}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3780DD83-E66A-4C03-B791-86F095C73776}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3780DD83-E66A-4C03-B791-86F095C73776}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3780DD83-E66A-4C03-B791-86F095C73776}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

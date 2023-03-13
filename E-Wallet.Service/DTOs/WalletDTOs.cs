@@ -14,7 +14,6 @@ namespace E_Wallet.Service.DTOs
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
-        public bool IsIdentified { get; set; }
         public decimal Balance { get; set; }
     }
 

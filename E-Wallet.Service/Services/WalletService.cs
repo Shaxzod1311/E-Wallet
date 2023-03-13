@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using E_Wallet.Data.IRepositories;
 using E_Wallet.Domain.Common;
-using E_Wallet.Domain.Models;
 using E_Wallet.Service.DTOs;
 using E_Wallet.Service.Interfaces;
 
@@ -20,52 +19,17 @@ namespace E_Wallet.Service.Services
             this.mapper = mapper;
         }
 
-        public async Task<WalletDTO> CheckAccountExistsAsync(Guid accountNumber)
+        public async Task<BaseResponse<WalletDTO>> GetAccountBalanceAsync(Guid accountNumber)
         {
-            var wallet = await unitOfWork.Wallets.GetAsync(wallet => wallet.Id == accountNumber);
+            BaseResponse<WalletDTO> response = new BaseResponse<WalletDTO>();
 
-            if (wallet != null)
-            {
-                var walletDTO = mapper.Map<WalletDTO>(wallet);
-                return walletDTO;
-            }
-            else
-                return null;
-        }
-
-        public async Task<bool> ToUpAccountAsync(Guid accountNumber, decimal amount)
-        {
-            var account = await unitOfWork.Wallets.GetAsync(wallet => wallet.Id == accountNumber);
-            if (account == null) return false;
-
-            var newBalance = account.Balance + amount;
-            if (account.IsIdentified && newBalance > 100000) return false;
-            if (!account.IsIdentified && newBalance > 10000) return false;
-
-            account.Balance = newBalance;
-            unitOfWork.Wallets.Update(account);
-
-            await unitOfWork.SaveChangesAsync();
-
-            return true;
-        }
-
-        public async Task<IEnumerable<Transaction>> GetRechargeSummaryAsync(Guid walletId)
-        {
-            var currentMonth = DateTime.Now.Month;
-
-            var result = unitOfWork.Transaction.GetAll(act => act.ToWalletId == walletId && act.Date.Month == currentMonth).AsEnumerable();
-
-            return result;
-        }
-
-        public async Task<decimal> GetAccountBalanceAsync(Guid accountNumber)
-        {
             var account = await unitOfWork.Wallets.GetAsync(wallet => wallet.Id == accountNumber);
 
-            if (account == null) return 0;
+            if (account == null) return response;
 
-            return account.Balance;
+            response.Data = mapper.Map<WalletDTO>(account);
+
+            return response;
         }
     }
 }

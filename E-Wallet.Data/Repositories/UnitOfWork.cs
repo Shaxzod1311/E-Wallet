@@ -12,14 +12,14 @@ namespace E_Wallet.Data.Repositories
             this.dbContext = dbContext;
 
             Users = new UserRepository(dbContext);
-            Incomes = new IncomeRepository(dbContext);
+            Transaction = new TransactionRepository(dbContext);
             Wallets = new WalletRepository(dbContext);
         }
 
         public IUserRepository Users { get; }
 
         public IWalletRepository Wallets { get; }
-        public IIncomeRepository Incomes { get; }
+        public ITransactionRepository Transaction { get; }
 
         public void Dispose()
         {

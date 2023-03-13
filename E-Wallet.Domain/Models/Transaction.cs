@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.Security.Cryptography;
+using E_Wallet.Domain.Enums;
 
 namespace E_Wallet.Domain.Models
 {
@@ -10,16 +10,15 @@ namespace E_Wallet.Domain.Models
         [Key]
         public Guid Id { get; set; }
 
-        [ForeignKey(nameof(ToUser))]
-        public Guid ToUserId { get; set; }
-        
-        [ForeignKey(nameof(ToUser))]
-        public Guid FromUserId { get; set; }
-        public Guid ToWalletId { get; set; }
+        [ForeignKey(nameof(User))]
+        public Guid UserId { get; set; }
+
+        [ForeignKey(nameof(Wallet))]
+        public Guid WalletId { get; set; }
         public decimal Amount { get; set; }
         public DateTime Date { get; set; }
-        public Guid FromWalletId { get; set; }
-        public User ToUser { get; set; }
-        public User FromUser { get; set; }
+        public TransactionTypes Type { get; set; }
+        public User? User { get; set; }
+        public Wallet? Wallet { get; set; }
     }
 }

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using E_Wallet.Domain.Common;
+using E_Wallet.Service.DTOs;
 
 namespace E_Wallet.Service.Interfaces
 {
-    internal class IUserService
+    public interface IUserService
     {
+        Task<BaseResponse<WalletDTO>> CheckAccountExistsAsync();
     }
 }

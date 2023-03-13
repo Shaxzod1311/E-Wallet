@@ -4,14 +4,15 @@ using E_Wallet.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace E_Wallet.Data.Repositories
 {
-    public class IncomeRepository : GenericRepository<Income>, IIncomeRepository
+    public class TransactionRepository : GenericRepository<Transaction>, ITransactionRepository
     {
-        public IncomeRepository(WalletDbContext dbContext) : base(dbContext)
+        public TransactionRepository(WalletDbContext dbContext) : base(dbContext)
         {
         }
     }

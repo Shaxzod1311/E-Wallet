@@ -1,5 +1,8 @@
 using E_Wallet.CustomMiddleware;
+using E_Wallet.Data.Data;
+using E_Wallet.Extensions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,23 +11,23 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(); 
+builder.Services.AddSwaggerGen();
+builder.Services.AddCustomServices();
 
-builder.Services.AddScoped<IAuthorizationHandler, HmacAuthorizationHandler>();
-
-builder.Services.AddAuthorization(options =>
+builder.Services.AddDbContext<WalletDbContext>(option =>
 {
-    options.AddPolicy("Hmac", policy =>
-    {
-        policy.AddRequirements(new HmacAuthorizationRequirement(userId => GetSecretKey(userId)));
-    });
+    option.UseNpgsql(builder.Configuration.GetConnectionString("WalletDb"));
 });
 
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+using (var scope = app.Services.CreateScope())
+{
+    scope.ServiceProvider.GetRequiredService<WalletDbSeed>();
+
+}
+    if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
