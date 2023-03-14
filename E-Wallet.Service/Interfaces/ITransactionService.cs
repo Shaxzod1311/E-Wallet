@@ -6,7 +6,7 @@ namespace E_Wallet.Service.Interfaces
 {
     public interface ITrasnactionService
     {
-        Task<BaseResponse<Guid>> TopUpWalletAsync(Guid WalletId, decimal amount);
+        Task<BaseResponse<Guid>> TopUpWalletAsync(TopUpDTO topUpDTO);
         Task<BaseResponse<IEnumerable<TransactionDTO>>> GetAllTransactionForcCurrentMonth(Guid walletId);
     }
 }

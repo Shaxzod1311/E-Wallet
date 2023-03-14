@@ -39,7 +39,7 @@ namespace E_Wallet.CustomMiddleware
                 return;
             }
 
-            var user = await userRepository.GetAsync(user => user.Id == userId);
+            var user = await userRepository.GetAsync(user => user.Id == Guid.Parse(userId));
 
             if (user == null)
             {

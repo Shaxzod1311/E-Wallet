@@ -44,16 +44,16 @@ namespace E_Wallet.Service.Services
 
         }
 
-        public async Task<BaseResponse<Guid>> TopUpWalletAsync(Guid WalletId, decimal amount)
+        public async Task<BaseResponse<Guid>> TopUpWalletAsync(TopUpDTO topUpDTO)
         {
             BaseResponse<Guid> response = new BaseResponse<Guid>();
 
-            var wallet = unitOfWork.Wallets.GetAll(wallet => wallet.Id == WalletId).FirstOrDefault();
+            var wallet = unitOfWork.Wallets.GetAll(wallet => wallet.Id == topUpDTO.WalletId).FirstOrDefault();
 
             if (wallet == null)
                 throw new HttpStatusCodeException(404, "not_found_error");
 
-            var newBalance = wallet.Balance + amount;
+            var newBalance = wallet.Balance + topUpDTO.Amount;
 
             if (User.IsIdentified && newBalance > 100000)
             {

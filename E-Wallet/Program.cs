@@ -33,11 +33,9 @@ using (var scope = app.Services.CreateScope())
     app.UseSwaggerUI();
 }
 
-app.UseMiddleware<CustomExceptionMiddleware>();
 app.UseMiddleware<AuthenticationMiddleware>();
+app.UseMiddleware<CustomExceptionMiddleware>();
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
 
 app.MapControllers();
 

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace E_Wallet.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("[controller]/[action]")]
     public class EwalletController : ControllerBase
     {
         private readonly ITrasnactionService transactionService;
@@ -22,27 +22,27 @@ namespace E_Wallet.Controllers
             this.userService = userService;
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<BaseResponse<WalletDTO>>> GetBalance(Guid accounNumber)
+        [HttpPost()]
+        public async Task<ActionResult<BaseResponse<WalletDTO>>> GetBalance([FromBody] Guid accounNumber)
         {
             return await walletService.GetAccountBalanceAsync(accounNumber);
 
         }
 
-        [HttpPost("{id}/topUp")]
-        public async Task<ActionResult<BaseResponse<Guid>>> TopUpAsync(Guid walletId, [FromBody] decimal amount)
+        [HttpPost()]
+        public async Task<ActionResult<BaseResponse<Guid>>> TopUpAsync(TopUpDTO topUpDTO)
         {
-            return await transactionService.TopUpWalletAsync(walletId, amount);
+            return await transactionService.TopUpWalletAsync(topUpDTO);
         }
 
-        [HttpGet("{id}/rechargeinfo")]
-        public async Task<ActionResult<BaseResponse<IEnumerable<TransactionDTO>>>> GetRechargeInfo(Guid walletId)
+        [HttpPost()]
+        public async Task<ActionResult<BaseResponse<IEnumerable<TransactionDTO>>>> GetRechargeInfo([FromBody] Guid walletId)
         {
             return await transactionService.GetAllTransactionForcCurrentMonth(walletId);
         }
 
 
-        [HttpGet()]
+        [HttpPost()]
         public async Task<ActionResult<BaseResponse<WalletDTO>>> CheckToAccountExists()
         {
             return await userService.CheckAccountExistsAsync();
