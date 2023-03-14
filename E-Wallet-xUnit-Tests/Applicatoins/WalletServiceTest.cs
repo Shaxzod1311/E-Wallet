@@ -2,23 +2,20 @@
 using E_Wallet.Data.Data;
 using E_Wallet.Data.Repositories;
 using E_Wallet.Domain.Models;
+using E_Wallet.Extensions;
 using E_Wallet.Service.Helpers;
-using E_Wallet.Service.Mapping;
+using E_Wallet.Service.Interfaces;
 using E_Wallet.Service.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace E_Wallet_xUnit_Tests.Applicatoins
 {
     public class WalletServiceTest
     {
+
         private IMapper mapper;
         private WalletDbContext db;
         private WalletService walletService;
@@ -35,6 +32,8 @@ namespace E_Wallet_xUnit_Tests.Applicatoins
             mapper = configurationProvider.CreateMapper();
 
         }
+
+        #region Configurations
 
         private void ConfigureDatabase()
         {
@@ -53,6 +52,9 @@ namespace E_Wallet_xUnit_Tests.Applicatoins
             walletService = new WalletService(moqUnitOfWrok.Object, mapper);
         }
 
+        #endregion
+
+        #region GetAccountBalance
 
         [Fact]
         public async Task GetAccountBalanceAsync_ReturnsValidResponse_WhenAccountExists()
@@ -80,6 +82,8 @@ namespace E_Wallet_xUnit_Tests.Applicatoins
             Assert.Equal(account.UserId, result.Data.UserId);
             Assert.Equal(account.Balance, result.Data.Balance);
         }
+
+
 
         [Fact]
         public async Task GetAccountBalanceAsync_ReturnsEmptyResponse_WhenAccountDoesNotExist()
@@ -116,5 +120,33 @@ namespace E_Wallet_xUnit_Tests.Applicatoins
         }
 
 
+        [Fact]
+        public async Task GetAccountBalanceAsync_ShouldReturnWalletDto_WhenAccountExists()
+        {
+            // Arrange
+            ConfigureDatabase();
+            ConfigureServices();
+
+            var accountNumber = Guid.NewGuid();
+            var expectedBalance = 100.00m;
+            var account = new Wallet
+            {
+                Id = accountNumber,
+                Balance = expectedBalance,
+                User = new User { Id = Guid.NewGuid(), Name = "1", Username = "1" }
+            };
+
+            db.Wallets.Add(account);
+            db.SaveChanges();
+            // Act
+            var result = await walletService.GetAccountBalanceAsync(accountNumber);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.NotNull(result.Data);
+            Assert.Equal(expectedBalance, result.Data.Balance);
+        }
+
+        #endregion
     }
 }

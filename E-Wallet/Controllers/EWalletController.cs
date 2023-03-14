@@ -22,30 +22,30 @@ namespace E_Wallet.Controllers
             this.userService = userService;
         }
 
-        [HttpPost()]
-        public async Task<ActionResult<BaseResponse<WalletDTO>>> GetBalance([FromBody] Guid accounNumber)
+        [HttpPost]
+        public async Task<ActionResult<BaseResponse<WalletDTO>>> GetBalance([FromBody] Guid walletId)
         {
-            return await walletService.GetAccountBalanceAsync(accounNumber);
+            return await walletService.GetAccountBalanceAsync(walletId);
 
         }
 
-        [HttpPost()]
+        [HttpPost]
         public async Task<ActionResult<BaseResponse<Guid>>> TopUpAsync(TopUpDTO topUpDTO)
         {
             return await transactionService.TopUpWalletAsync(topUpDTO);
         }
 
-        [HttpPost()]
+        [HttpPost]
         public async Task<ActionResult<BaseResponse<IEnumerable<TransactionDTO>>>> GetRechargeInfo([FromBody] Guid walletId)
         {
             return await transactionService.GetAllTransactionForcCurrentMonth(walletId);
         }
 
 
-        [HttpPost()]
-        public async Task<ActionResult<BaseResponse<WalletDTO>>> CheckToAccountExists()
+        [HttpPost]
+        public async Task<ActionResult<BaseResponse<WalletDTO>>> CheckToAccountExists([FromBody] Guid userId)
         {
-            return await userService.CheckAccountExistsAsync();
+            return await userService.CheckAccountExistsAsync(userId);
         }
     }
 }

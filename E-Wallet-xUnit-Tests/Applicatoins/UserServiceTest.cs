@@ -3,8 +3,8 @@ using E_Wallet.Data.Data;
 using E_Wallet.Data.Repositories;
 using E_Wallet.Domain.Common;
 using E_Wallet.Domain.Models;
+using E_Wallet.Extensions;
 using E_Wallet.Service.Helpers;
-using E_Wallet.Service.Mapping;
 using E_Wallet.Service.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +36,9 @@ namespace E_Wallet_xUnit_Tests.Applicatoins
             mapper = configurationProvider.CreateMapper();
 
         }
+
+
+        #region Configuration
 
         private void ConfigureClaims(Guid? userId)
         {
@@ -79,6 +82,11 @@ namespace E_Wallet_xUnit_Tests.Applicatoins
             userService = new UserService(moqUnitOfWrok.Object, mapper, user);
         }
 
+        #endregion
+
+
+        #region CheckAccountExists
+
         [Fact]
         public async Task CheckAccountExistsAsync_ReturnsValidResponse_WhenWalletExists()
         {
@@ -98,7 +106,7 @@ namespace E_Wallet_xUnit_Tests.Applicatoins
             await db.SaveChangesAsync();
 
             // Act
-            var result = await userService.CheckAccountExistsAsync();
+            var result = await userService.CheckAccountExistsAsync(user.Id);
 
             // Assert
             Assert.NotNull(result);
@@ -118,9 +126,11 @@ namespace E_Wallet_xUnit_Tests.Applicatoins
             ConfigureServices();
 
             // Act & Assert
-            await Assert.ThrowsAsync<HttpStatusCodeException>(() => userService.CheckAccountExistsAsync());
+            await Assert.ThrowsAsync<HttpStatusCodeException>(() => userService.CheckAccountExistsAsync(user.Id));
 
         }
+
+        #endregion
 
     }
 }

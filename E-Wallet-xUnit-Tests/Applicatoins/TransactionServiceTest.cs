@@ -1,14 +1,14 @@
 ﻿
 using AutoMapper;
 using E_Wallet.Data.Data;
-using E_Wallet.Data.IRepositories;
 using E_Wallet.Data.Repositories;
 using E_Wallet.Domain.Common;
 using E_Wallet.Domain.Enums;
 using E_Wallet.Domain.Models;
+using E_Wallet.Extensions;
+using E_Wallet.Service.DTOs;
 using E_Wallet.Service.Helpers;
 using E_Wallet.Service.Interfaces;
-using E_Wallet.Service.Mapping;
 using E_Wallet.Service.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +36,7 @@ namespace E_Wallet_xUnit_Tests.Applicatoins
             mapper = new Mapper(new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperConfig>()));
         }
 
+        #region Configurations
 
         private void ConfigureDatabase()
         {
@@ -77,6 +78,11 @@ namespace E_Wallet_xUnit_Tests.Applicatoins
             unitOfWork = new Mock<UnitOfWork>(db);
             transactionService = new TransactionService(unitOfWork.Object, mapper, user);
         }
+
+        #endregion
+
+
+        #region GetAllTransactionsForCurrentMonth
 
         [Fact]
         public async Task GetAllTransactionForCurrentMonth_ReturnsValidResponse_WhenTransactionsExist()
@@ -136,6 +142,11 @@ namespace E_Wallet_xUnit_Tests.Applicatoins
             await Assert.ThrowsAsync<HttpStatusCodeException>(() => transactionService.GetAllTransactionForcCurrentMonth(walletId));
         }
 
+        #endregion
+
+
+        #region TopUpWallet
+
         [Fact]
         public async Task TopUpWalletAsync_UpdatesBalance_WhenWalletExistsAndAmountIsValid()
         {
@@ -159,8 +170,10 @@ namespace E_Wallet_xUnit_Tests.Applicatoins
             db.Wallets.Add(wallet);
             db.SaveChanges();
 
+            var topUpDTO = new TopUpDTO { WalletId = wallet.Id, Amount = amount };
+
             // Act
-            var result = await transactionService.TopUpWalletAsync(walletId, amount);
+            var result = await transactionService.TopUpWalletAsync(topUpDTO);
 
             // Assert
             Assert.NotNull(result);
@@ -178,8 +191,10 @@ namespace E_Wallet_xUnit_Tests.Applicatoins
             var walletId = Guid.NewGuid();
             var amount = 100;
 
+            var topUpDTO = new TopUpDTO { WalletId = walletId, Amount = amount };
+
             // Act and Assert
-            await Assert.ThrowsAsync<HttpStatusCodeException>(() => transactionService.TopUpWalletAsync(walletId, amount));
+            await Assert.ThrowsAsync<HttpStatusCodeException>(() => transactionService.TopUpWalletAsync(topUpDTO));
         }
 
         [Fact]
@@ -199,8 +214,10 @@ namespace E_Wallet_xUnit_Tests.Applicatoins
             await db.SaveChangesAsync();
             var amount = 2000;
 
+            var topUpDTO = new TopUpDTO { WalletId = wallet.Id, Amount = amount };
+            
             // Act and Assert
-            await Assert.ThrowsAsync<HttpStatusCodeException>(() => transactionService.TopUpWalletAsync(wallet.Id, amount));
+            await Assert.ThrowsAsync<HttpStatusCodeException>(() => transactionService.TopUpWalletAsync(topUpDTO));
         }
 
         [Fact]
@@ -220,8 +237,10 @@ namespace E_Wallet_xUnit_Tests.Applicatoins
             await db.SaveChangesAsync();
             var amount = 6000;
 
+            var topUpDTO = new TopUpDTO { WalletId = wallet.Id, Amount = amount };
+
             // Act and Assert
-            await Assert.ThrowsAsync<HttpStatusCodeException>(() => transactionService.TopUpWalletAsync(wallet.Id, amount));
+            await Assert.ThrowsAsync<HttpStatusCodeException>(() => transactionService.TopUpWalletAsync(topUpDTO));
         }
 
         [Fact]
@@ -244,8 +263,10 @@ namespace E_Wallet_xUnit_Tests.Applicatoins
             await db.SaveChangesAsync();
             var amount = 1000;
 
+            var topUpDTO = new TopUpDTO { WalletId = wallet.Id, Amount = amount };
+
             // Act
-            var result = await transactionService.TopUpWalletAsync(wallet.Id, amount);
+            var result = await transactionService.TopUpWalletAsync(topUpDTO);
 
             // Assert
             var updatedWallet = await db.Wallets.FirstOrDefaultAsync(w => w.Id == wallet.Id);
@@ -253,6 +274,8 @@ namespace E_Wallet_xUnit_Tests.Applicatoins
             Assert.Equal(11000M, updatedWallet.Balance);
             Assert.Equal(wallet.Id, result.Data);
         }
+
+        #endregion
 
     }
 }

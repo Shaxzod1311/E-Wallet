@@ -23,9 +23,14 @@ namespace E_Wallet.Service.Services
             this.User = User;
         }
 
-        public async Task<BaseResponse<WalletDTO>> CheckAccountExistsAsync()
+        public async Task<BaseResponse<WalletDTO>> CheckAccountExistsAsync(Guid userId)
         {
             BaseResponse<WalletDTO> response = new BaseResponse<WalletDTO>();
+
+            if (User.Id != userId)
+            {
+                throw new HttpStatusCodeException(409, "invalid_data_error");
+            }
 
             var wallet = await unitOfWork.Wallets.GetAsync(wallet => wallet.UserId == User.Id);
 

@@ -1,7 +1,10 @@
 ﻿using E_Wallet.Data.IRepositories;
+using System.IO;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace E_Wallet.CustomMiddleware
 {
@@ -48,7 +51,9 @@ namespace E_Wallet.CustomMiddleware
             }
 
             var hmac = new HMACSHA1(Encoding.UTF8.GetBytes(user.SecretKey));
+
             var requestContent = await new StreamReader(context.Request.Body).ReadToEndAsync();
+
             var hashBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(requestContent));
             var hashString = Convert.ToBase64String(hashBytes);
 
@@ -58,7 +63,24 @@ namespace E_Wallet.CustomMiddleware
                 return;
             }
 
-            context.Items["User"] = user;
+            var claims = new List<Claim>
+            {
+
+                new Claim("Id", userId.ToString()),
+                new Claim("Username",  userId.ToString()),
+                new Claim("IsIdentified", "true"),
+
+            };
+
+            var identity = new ClaimsIdentity(claims, "User");
+            var claimPrincipal = new ClaimsPrincipal(identity);
+
+            context.User = claimPrincipal;
+
+            byte[] byteArray = Encoding.UTF8.GetBytes(requestContent);
+            MemoryStream stream = new MemoryStream(byteArray);
+
+            context.Request.Body = stream;
 
             await _next(context);
         }

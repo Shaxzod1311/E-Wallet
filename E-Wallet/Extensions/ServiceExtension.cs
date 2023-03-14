@@ -28,7 +28,6 @@ namespace E_Wallet.Extensions
             services.AddScoped<IdentifyUser>();
             services.AddScoped<WalletDbSeed>();
 
-
             var mapperConfig = new MapperConfiguration(mc => {
                 mc.AddProfile(new AutoMapperConfig());
                 mc.AllowNullCollections = true;
@@ -37,6 +36,7 @@ namespace E_Wallet.Extensions
             IMapper mapper = mapperConfig.CreateMapper();
 
             services.AddSingleton(mapper);
+
             services.AddHttpContextAccessor();
         }
     }

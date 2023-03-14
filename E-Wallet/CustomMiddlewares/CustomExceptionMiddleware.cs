@@ -2,6 +2,7 @@
 using E_Wallet.Domain.Common;
 using Newtonsoft.Json;
 
+
 namespace E_Wallet.CustomMiddleware
 {
     public class CustomExceptionMiddleware
@@ -40,6 +41,7 @@ namespace E_Wallet.CustomMiddleware
                 Code = exception.StatusCode
             };
 
+
             context.Response.StatusCode = exception.StatusCode;
             return context.Response.WriteAsync(JsonConvert.SerializeObject(result));
         }
@@ -49,7 +51,7 @@ namespace E_Wallet.CustomMiddleware
             context.Response.ContentType = "application/json";
             ErrorResponse result = new ErrorResponse()
             {
-                Message = "server error",
+                Message = exception.Message,
                 Code = 500
             };
 

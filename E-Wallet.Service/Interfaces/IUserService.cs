@@ -5,6 +5,6 @@ namespace E_Wallet.Service.Interfaces
 {
     public interface IUserService
     {
-        Task<BaseResponse<WalletDTO>> CheckAccountExistsAsync();
+        Task<BaseResponse<WalletDTO>> CheckAccountExistsAsync(Guid userId);
     }
 }
